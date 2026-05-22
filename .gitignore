@@ -1,0 +1,31 @@
+# --- System ---
+.DS_Store
+Thumbs.db
+.env
+.env.local
+.env.*.local
+
+# --- Python / Django ---
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+celerybeat-schedule
+*.log
+
+# --- Node / React ---
+node_modules/
+/frontend/dist
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+
+# --- Docker & DB ---
+.docker/
+postgres_data/
