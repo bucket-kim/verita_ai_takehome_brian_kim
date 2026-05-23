@@ -20,6 +20,7 @@ Metered API billing system with Django REST Framework backend and React frontend
 - **Tenant scoping**: TenantScopedAPIView base class sets `self.customer = request.user` in initial() - extend for all /v1 views
 - **Cursor pagination**: Base64-encoded `timestamp|id` format for stateless pagination across large datasets
 - **Idempotency**: bulk_create(ignore_conflicts=True) for events, get_or_create() for webhook deliveries
+- **Events API format**: POST /v1/events accepts `{"events": [{request_id, api_key_id, endpoint, units, timestamp}]}` bulk format, returns 207 Multi-Status
 - **Concurrency safety**: select_for_update() when modifying customer balances/credits, transaction.atomic() for multi-step updates
 - **Security**: hmac.compare_digest() for constant-time comparison (webhook signatures, tokens)
 - **Audit logging**: Create AuditLog entries for sensitive ops actions with before_value/after_value
@@ -54,6 +55,7 @@ Metered API billing system with Django REST Framework backend and React frontend
 - Access postgres: `psql postgresql://postgres:postgres@localhost:5432/metered_billing`
 - Query data counts: `docker-compose exec backend python manage.py shell -c "from apps.customers.models import Customer; print(Customer.objects.count())"`
 - Test with API key: `curl -H "X-API-Key: sk_..." http://localhost:8000/v1/invoices`
+- Create test customer: `docker-compose exec backend python manage.py shell -c "import hashlib; from apps.customers.models import Customer, ApiKey; c, _ = Customer.objects.get_or_create(email='test@example.com', defaults={'name': 'Test Customer'}); ApiKey.objects.filter(customer=c).delete(); key = 'sk_test_12345678901234567890123456789012'; ApiKey.objects.create(customer=c, key_hash=hashlib.sha256(key.encode()).hexdigest(), key_prefix=key[:8]); print(f'API Key: {key}')"`
 
 ### Linting and Formatting
 
@@ -65,16 +67,27 @@ Metered API billing system with Django REST Framework backend and React frontend
 
 - Run all frontend checks: `cd frontend && npm run lint && npx tsc --noEmit && npm run build`
 - Run backend tests: `docker-compose exec backend pytest`
+- Run specific test: `docker-compose exec backend pytest tests/test_name.py -v`
+- Run tests with details: `docker-compose exec backend pytest tests/ -v --tb=long`
 - Run makemigrations: `docker-compose exec backend python manage.py makemigrations customers usage billing ops`
 - Run database migrations: `docker-compose exec backend python manage.py migrate`
 
 **Note:** Backend service must be running for `docker-compose exec` commands
+
+## Testing Patterns
+
+- **pytest fixtures**: Define shared test data in conftest.py (customers, API keys, tokens)
+- **Threading tests**: Use `@pytest.mark.django_db(transaction=True)` for concurrent tests
+- **Webhook tests**: Use `api_client.generic()` for exact request body control (signature verification)
+- **EventsView format**: POST to `/v1/events` with `{"events": [...]}` bulk format, returns 207 status
+- **Idempotency testing**: Test same operation from multiple threads with same idempotency key
 
 ## Common Patterns
 
 - **Customer as user object**: Customer model needs `is_authenticated` property for DRF's IsAuthenticated permission
 - **Management commands**: Create in `apps/<app>/management/commands/<name>.py` with `__init__.py` files in parent dirs
 - **Month arithmetic**: Avoid external deps - use manual month/year calculation instead of dateutil.relativedelta
+- **AuditLog entity_id queries**: Convert integer IDs to strings before filtering (entity_id is CharField, not IntegerField)
 
 ## Frontend Development
 
@@ -86,3 +99,6 @@ Metered API billing system with Django REST Framework backend and React frontend
 - **Data fetching hooks**: Wrap fetch functions in useCallback, disable `react-hooks/set-state-in-effect` rule for initial data fetch in useEffect
 - **Frontend dev server**: `npm run dev` starts Vite at localhost:5173, auto-reloads on changes
 - **Testing UI**: Use sample API key from `python manage.py seed` output
+- **Vite in Docker**: Add `server: { host: '0.0.0.0', port: 5173 }` to vite.config.ts for external access
+- **CORS headers**: Custom headers (`x-api-key`, `x-ops-token`, `x-idempotency-key`) must be in CORS_ALLOW_HEADERS in dev.py
+- **Frontend restart**: Run `docker-compose restart frontend` after adding new pages/components for proper loading
