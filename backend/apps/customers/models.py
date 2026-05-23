@@ -8,6 +8,13 @@ class Customer(models.Model):
     email = models.EmailField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    @property
+    def is_authenticated(self):
+        """
+        Always return True. This is required for DRF's IsAuthenticated permission.
+        """
+        return True
+
     def __str__(self):
         return f"{self.name} ({self.email})"
 

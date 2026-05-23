@@ -5,3 +5,4 @@ django-environ
 markdown
 django-filter
 APScheduler
+django-cors-headers

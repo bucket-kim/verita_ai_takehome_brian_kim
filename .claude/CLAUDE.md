@@ -1,28 +1,68 @@
-## Key Conventions
+# General Guidelines
 
-- **Django models**: Use string references for cross-app ForeignKeys (e.g., `"customers.Customer"`)
-- **Money handling**: IntegerField (cents), millicents for pricing - no floats
-- **Immutable models**: Override save/delete to raise PermissionError (e.g., AuditLog)
+**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
 
-## Build and Test Commands
+## 1. Think Before Coding
 
-### Development and Build
+**Don't assume. Don't hide confusion. Surface tradeoffs.**
 
-- Build stack: `docker-compose build`
-- Spin up full stack: `docker-compose up`
-- Start services detached: `docker-compose up -d`
-- Build frontend: `cd frontend && tsc -b && vite build`
+Before implementing:
 
-### Linting and Formatting
+- State your assumptions explicitly. If uncertain, ask.
+- If multiple interpretations exist, present them - don't pick silently.
+- If a simpler approach exists, say so. Push back when warranted.
+- If something is unclear, stop. Name what's confusing. Ask.
 
-- Lint and fix frontend: `cd frontend && npm run lint`
-- Lint backend (black): `docker-compose exec backend black .`
-- Check types (frontend): `cd frontend && npx tsc --noEmit`
+## 2. Simplicity First
 
-### Testing
+**Minimum code that solves the problem. Nothing speculative.**
 
-- Run backend tests: `docker-compose exec backend pytest`
-- Run makemigrations: `docker-compose exec backend python manage.py makemigrations customers usage billing ops`
-- Run database migrations: `docker-compose exec backend python manage.py migrate`
+- No features beyond what was asked.
+- No abstractions for single-use code.
+- No "flexibility" or "configurability" that wasn't requested.
+- No error handling for impossible scenarios.
+- If you write 200 lines and it could be 50, rewrite it.
 
-**Note:** Backend service must be running for `docker-compose exec` commands
+Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
+
+## 3. Surgical Changes
+
+**Touch only what you must. Clean up only your own mess.**
+
+When editing existing code:
+
+- Don't "improve" adjacent code, comments, or formatting.
+- Don't refactor things that aren't broken.
+- Match existing style, even if you'd do it differently.
+- If you notice unrelated dead code, mention it - don't delete it.
+
+When your changes create orphans:
+
+- Remove imports/variables/functions that YOUR changes made unused.
+- Don't remove pre-existing dead code unless asked.
+
+The test: Every changed line should trace directly to the user's request.
+
+## 4. Goal-Driven Execution
+
+**Define success criteria. Loop until verified.**
+
+Transform tasks into verifiable goals:
+
+- "Add validation" → "Write tests for invalid inputs, then make them pass"
+- "Fix the bug" → "Write a test that reproduces it, then make it pass"
+- "Refactor X" → "Ensure tests pass before and after"
+
+For multi-step tasks, state a brief plan:
+
+```
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+3. [Step] → verify: [check]
+```
+
+Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+
+---
+
+**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
