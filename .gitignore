@@ -3,6 +3,7 @@
 Thumbs.db
 .env
 .env.local
+.env.example
 .env.*.local
 
 # --- Python / Django ---
