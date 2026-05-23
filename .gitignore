@@ -26,6 +26,10 @@ node_modules/
 .stylelintcache
 *.tsbuildinfo
 
+# --- Claude ---
+.claude/
+.claude.local.md
+
 # --- Docker & DB ---
 .docker/
 postgres_data/
