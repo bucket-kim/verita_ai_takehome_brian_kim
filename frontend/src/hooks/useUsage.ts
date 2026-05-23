@@ -48,7 +48,7 @@ export const useUsage = (options: UseUsageOptions = {}) => {
   }, [options.start, options.end, options.limit]);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+     
     void fetchUsage();
   }, [fetchUsage]);
 
