@@ -21,6 +21,7 @@ This system demonstrates how a real-world usage-based billing platform works:
 - **Ops console** - Issue credits, adjust invoices, view audit logs
 
 **Key architectural decisions:**
+
 - Idempotent APIs prevent duplicate charges
 - Concurrency-safe operations using row locks
 - Immutable audit trail for compliance
@@ -49,11 +50,13 @@ cp .env.example .env
 After startup, you'll see credentials displayed. Or run: `./show_credentials.sh`
 
 ### Customer Portal
+
 - **URL:** http://localhost:5173/customer/login
 - **API Key:** `sk_test_demo_key_11111111111111111111111111111111`
 - **What you'll see:** Usage dashboard, invoices (~$6,500), 1,500+ events
 
 ### Ops Console
+
 - **URL:** http://localhost:5173/ops/login
 - **Token:** `ops-dev-token-12345`
 - **What you'll see:** Customer management, credit issuance, audit logs
@@ -63,18 +66,21 @@ After startup, you'll see credentials displayed. Or run: `./show_credentials.sh`
 ## Key Features
 
 ### For Customers
+
 - Real-time usage dashboard with charts
 - Detailed invoices with tiered pricing breakdown
 - Filterable usage events with pagination
 - API access via secure API keys
 
 ### For Operations
+
 - Manage all customers and their usage
 - Issue credits with audit trail
 - Override invoice line items with reason tracking
 - View immutable audit logs for compliance
 
 ### Technical Highlights
+
 - **Concurrency-safe:** Row locks prevent race conditions
 - **Idempotent:** Duplicate requests don't create duplicate charges
 - **Tenant isolation:** Customers can't see each other's data
@@ -95,6 +101,7 @@ Background Jobs (Hourly aggregation, monthly invoicing)
 ```
 
 **Scale characteristics:**
+
 - Current: 200 events/sec, 20 customers
 - Bottleneck: Aggregator at 2000 events/sec (needs sharding)
 - Solution path: Horizontal scaling, read replicas, partitioning
@@ -116,7 +123,6 @@ See [DESIGN.md](DESIGN.md) for detailed architecture and scaling analysis.
 
 - **[DESIGN.md](DESIGN.md)** - Architecture decisions, scaling analysis, trade-offs
 - **[CLAUDE.md](CLAUDE.md)** - Development guidelines and coding conventions
-- **[LOGIN_GUIDE.md](LOGIN_GUIDE.md)** - Detailed login instructions and troubleshooting
 
 ---
 
