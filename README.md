@@ -467,9 +467,8 @@ cd frontend && npm run lint && npx tsc --noEmit
 **Project by:** Brian Kim
 
 For questions about this implementation:
-- 📧 Email: [your-email@example.com]
-- 💼 LinkedIn: [linkedin.com/in/yourprofile](https://linkedin.com/in/yourprofile)
-- 🐙 GitHub: [@yourusername](https://github.com/yourusername)
+- 📧 Email: [brian.kyounghoon.kim@gmail.com]
+- 💼 Website: [https://bkim-web.vercel.app/]
 
 ---
 
