@@ -48,7 +48,6 @@ export const useUsage = (options: UseUsageOptions = {}) => {
   }, [options.start, options.end, options.limit]);
 
   useEffect(() => {
-     
     void fetchUsage();
   }, [fetchUsage]);
 

@@ -53,16 +53,30 @@ class Command(BaseCommand):
 
         self.stdout.write(self.style.SUCCESS(f'Created {len(customers)} customers'))
 
-        # Print sample API key
-        if sample_api_key:
-            self.stdout.write(self.style.WARNING('\n' + '='*60))
-            self.stdout.write(self.style.WARNING('SAMPLE API KEY (save this for testing):'))
-            self.stdout.write(self.style.WARNING('='*60))
-            self.stdout.write(f"Customer: {sample_api_key['customer']}")
-            self.stdout.write(f"Email: {sample_api_key['email']}")
-            self.stdout.write(f"API Key ID: {sample_api_key['id']}")
-            self.stdout.write(f"API Key: {sample_api_key['plaintext']}")
-            self.stdout.write(self.style.WARNING('='*60 + '\n'))
+        # Create a known test API key for easy testing
+        test_customer = customers[0]  # Use first customer
+        test_key_plaintext = 'sk_test_demo_key_11111111111111111111111111111111'
+        test_key_hash = hashlib.sha256(test_key_plaintext.encode()).hexdigest()
+
+        ApiKey.objects.create(
+            customer=test_customer,
+            key_hash=test_key_hash,
+            key_prefix='sk_test_'
+        )
+
+        # Print test credentials
+        self.stdout.write(self.style.WARNING('\n' + '='*60))
+        self.stdout.write(self.style.WARNING('TEST CREDENTIALS FOR LOGIN:'))
+        self.stdout.write(self.style.WARNING('='*60))
+        self.stdout.write(self.style.SUCCESS('Customer Portal Login:'))
+        self.stdout.write(f"  URL: http://localhost:5173/customer/login")
+        self.stdout.write(f"  API Key: {test_key_plaintext}")
+        self.stdout.write(f"  Customer: {test_customer.name} ({test_customer.email})")
+        self.stdout.write('')
+        self.stdout.write(self.style.SUCCESS('Ops Console Login:'))
+        self.stdout.write(f"  URL: http://localhost:5173/ops/login")
+        self.stdout.write(f"  Token: Check your .env file (default: ops-dev-token-12345)")
+        self.stdout.write(self.style.WARNING('='*60 + '\n'))
 
         # Generate ~50,000 usage events over 60 days
         self.stdout.write('Generating usage events...')

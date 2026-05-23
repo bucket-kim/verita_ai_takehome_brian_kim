@@ -3,11 +3,10 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Invoices from './pages/Invoices';
 import InvoiceDetail from './pages/InvoiceDetail';
+import OpsLogin from './pages/OpsLogin';
+import OpsCustomers from './pages/OpsCustomers';
+import OpsCustomerDetail from './pages/OpsCustomerDetail';
 import Layout from './components/Layout';
-import OpsLogin from './pages/ops/OpsLogin';
-import OpsCustomers from './pages/ops/OpsCustomers';
-import OpsCustomerDetail from './pages/ops/OpsCustomerDetail';
-import OpsInvoiceEdit from './pages/ops/OpsInvoiceEdit';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const apiKey = localStorage.getItem('apiKey');
@@ -33,6 +32,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Customer Routes */}
         <Route path="/customer/login" element={<Login />} />
         <Route
           path="/customer/dashboard"
@@ -58,6 +58,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* Ops Routes */}
         <Route path="/ops/login" element={<OpsLogin />} />
         <Route
           path="/ops/customers"
@@ -75,14 +77,8 @@ function App() {
             </OpsProtectedRoute>
           }
         />
-        <Route
-          path="/ops/invoices/:id/edit"
-          element={
-            <OpsProtectedRoute>
-              <OpsInvoiceEdit />
-            </OpsProtectedRoute>
-          }
-        />
+
+        {/* Default Route */}
         <Route path="/" element={<Navigate to="/customer/dashboard" replace />} />
       </Routes>
     </BrowserRouter>
