@@ -47,10 +47,10 @@ export default function InvoiceDetail() {
         ← Back to Invoices
       </Link>
 
-      <div className="bg-white shadow rounded-lg p-6 mb-6">
+      <div className="bg-transparent rounded-lg p-6 mb-6">
         <div className="flex justify-between items-start mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Invoice #{invoice.id.slice(0, 8)}</h1>
+            <h1 className="text-6xl font-light text-gray-900 mb-6">Invoice #{invoice.id.slice(0, 8)}</h1>
             <p className="text-gray-600">
               Period: {new Date(invoice.period_start).toLocaleDateString()} -{' '}
               {new Date(invoice.period_end).toLocaleDateString()}
@@ -64,7 +64,7 @@ export default function InvoiceDetail() {
             >
               {invoice.status}
             </span>
-            <p className="text-3xl font-bold text-gray-900 mt-2">{formatMoney(invoice.total_cents)}</p>
+            <p className="text-6xl font-light text-gray-900 mb-6">{formatMoney(invoice.total_cents)}</p>
           </div>
         </div>
 
@@ -75,7 +75,7 @@ export default function InvoiceDetail() {
         )}
       </div>
 
-      <div className="bg-white shadow rounded-lg overflow-hidden">
+      <div className="bg-transparent  rounded-lg overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900">Line Items</h2>
         </div>

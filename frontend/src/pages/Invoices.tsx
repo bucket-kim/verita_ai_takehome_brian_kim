@@ -41,13 +41,19 @@ export default function Invoices() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Invoices</h1>
+      <h1 className="flex flex-col items-flex-start justify-center gap-2">
+        <span className="text-gray-500 text-sm uppercase">
+          Current billing period:
+        </span>
+        <span className="text-6xl font-light text-gray-900 mb-6">Invoices</span>
+        <span className="text-gray-500 text-sm ">View and download your billing history.</span>
+      </h1>
 
-      <div className="bg-white shadow rounded-lg overflow-hidden">
+      <div className="bg-transparent rounded-lg overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+          <thead className="bg-transparent">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Period
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -61,7 +67,7 @@ export default function Invoices() {
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-transparent divide-y divide-gray-200 border-b border-gray-200">
             {invoices.length === 0 ? (
               <tr>
                 <td colSpan={4} className="px-6 py-4 text-center text-gray-500">
@@ -71,7 +77,7 @@ export default function Invoices() {
             ) : (
               invoices.map((invoice) => (
                 <tr key={invoice.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-6 py-8 whitespace-nowrap text-sm text-gray-900">
                     {new Date(invoice.period_start).toLocaleDateString()} -{' '}
                     {new Date(invoice.period_end).toLocaleDateString()}
                   </td>

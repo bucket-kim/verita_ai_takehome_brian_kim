@@ -70,17 +70,25 @@ export default function Dashboard() {
       </div>
     );
   }
-
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">
-        Current billing period: {monthName}
+      <h1 className="flex flex-col items-flex-start justify-center gap-6">
+        <span className="text-gray-500 text-sm uppercase">
+          Current billing period:
+        </span>
+        <span className="text-6xl font-light text-gray-900 mb-6">{monthName}</span>
       </h1>
 
       <div className="bg-white rounded-lg shadow p-6 mb-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Daily Usage</h2>
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={500}>
           <AreaChart data={dailyData}>
+            <defs>
+              <linearGradient id="usageGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#e5fe42" stopOpacity={1} />
+                <stop offset="100%" stopColor="#f5ffb1" stopOpacity={0} />
+              </linearGradient>
+            </defs>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey="date"
@@ -94,21 +102,23 @@ export default function Dashboard() {
             <Area
               type="monotone"
               dataKey="units"
-              stroke="#3b82f6"
-              fill="#93c5fd"
+              stroke="#bace36"
+              fill="url(#usageGradient)"
             />
           </AreaChart>
         </ResponsiveContainer>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-sm font-medium text-gray-500 mb-2">Total Units This Period</h3>
-          <p className="text-3xl font-bold text-gray-900">{totalUnits.toLocaleString()}</p>
+        <div className="bg-transparent rounded-lg p-6">
+          <h3 className="text-sm font-medium text-gray-500 mb-2 uppercase">Total Units This Period</h3>
+          <p className="text-6xl font-light text-gray-900">{totalUnits.toLocaleString()}</p>
+          <p className="text-sm text-gray-500">units</p>
         </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-sm font-medium text-gray-500 mb-2">Estimated Charge</h3>
-          <p className="text-3xl font-bold text-gray-900">{formatMoney(estimatedCharge)}</p>
+        <div className="bg-transparent rounded-lg p-6">
+          <h3 className="text-sm font-medium text-gray-500 mb-2 uppercase">Estimated Charge</h3>
+          <p className="text-6xl font-light text-gray-900">{formatMoney(estimatedCharge)}</p>
+          <p className="text-sm text-gray-500">USD</p>
         </div>
       </div>
     </div>
